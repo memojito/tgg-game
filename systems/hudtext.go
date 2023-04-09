@@ -178,7 +178,24 @@ func (h *HUDTextSystem) Add(b *ecs.BasicEntity, s *common.SpaceComponent, m *com
 }
 
 // Update is called each frame to update the system.
-func (h *HUDTextSystem) Update(dt float32) {}
+func (h *HUDTextSystem) Update(dt float32) {
+	for _, e := range h.entities {
+		if e.MouseComponent.Clicked {
+			txt := h.text1.RenderComponent.Drawable.(common.Text)
+			txt.Text = e.Line1
+			h.text1.RenderComponent.Drawable = txt
+			txt = h.text2.RenderComponent.Drawable.(common.Text)
+			txt.Text = e.Line2
+			h.text2.RenderComponent.Drawable = txt
+			txt = h.text3.RenderComponent.Drawable.(common.Text)
+			txt.Text = e.Line3
+			h.text3.RenderComponent.Drawable = txt
+			txt = h.text4.RenderComponent.Drawable.(common.Text)
+			txt.Text = e.Line4
+			h.text4.RenderComponent.Drawable = txt
+		}
+	}
+}
 
 // Remove takes an enitty out of the system.
 // It does nothing as HUDTextSystem has no entities.

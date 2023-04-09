@@ -56,6 +56,20 @@ func (lb *LocationBuildingSystem) Update(dt float32) {
 				sys.Add(&location.BasicEntity, &location.RenderComponent, &location.SpaceComponent)
 			}
 		}
+
+		engo.Mailbox.Dispatch(HUDTextMessage{
+			BasicEntity: ecs.NewBasic(),
+			SpaceComponent: common.SpaceComponent{
+				Position: engo.Point{0.1, 0.1},
+				Width:    64,
+				Height:   64,
+			},
+			MouseComponent: common.MouseComponent{},
+			Line1:          "Town",
+			Line2:          "Just built!",
+			Line3:          "A town generates",
+			Line4:          "$100 per day.",
+		})
 	}
 }
 
