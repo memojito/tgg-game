@@ -107,6 +107,7 @@ func (*myScene) Setup(u engo.Updater) {
 					Height:   0,
 				}
 				tiles = append(tiles, tile)
+				tile.RenderComponent.SetZIndex(-1)
 			}
 		}
 	}
@@ -120,15 +121,15 @@ func (*myScene) Setup(u engo.Updater) {
 		}
 	}
 
-	common.CameraBounds = levelData.Bounds()
+	//common.CameraBounds = levelData.Bounds()
 }
 
 func main() {
 	opts := engo.RunOptions{
-		Title:  "tgg",
-		Width:  1280,
-		Height: 640,
-		//StandardInputs: true, // allows using arrow keys to move the camera around.
+		Title:          "tgg",
+		Width:          1280,
+		Height:         640,
+		StandardInputs: true, // allows using arrow keys to move the camera around.
 	}
 	engo.Run(opts, &myScene{})
 
