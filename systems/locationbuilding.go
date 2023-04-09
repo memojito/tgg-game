@@ -33,7 +33,6 @@ func (*LocationBuildingSystem) Remove(entity ecs.BasicEntity) {
 // in seconds since the last frame
 func (lb *LocationBuildingSystem) Update(dt float32) {
 	if engo.Input.Button("AddLocation").JustPressed() {
-		fmt.Println("The gamer pressed W")
 
 		location := Location{BasicEntity: ecs.NewBasic()}
 		location.SpaceComponent = common.SpaceComponent{

@@ -31,20 +31,25 @@ func (*myScene) Preload() {
 // to add entities and systems to your Scene.
 func (*myScene) Setup(u engo.Updater) {
 	world, _ := u.(*ecs.World)
-	engo.Input.RegisterButton("AddLocation", engo.KeyW)
+	engo.Input.RegisterButton("AddLocation", engo.KeyF)
 	common.SetBackground(color.White)
 
 	world.AddSystem(&common.RenderSystem{})
 	world.AddSystem(&common.MouseSystem{})
+	kbs := common.NewKeyboardScroller(
+		400, engo.DefaultHorizontalAxis,
+		engo.DefaultVerticalAxis)
+	world.AddSystem(kbs)
 
 	world.AddSystem(&systems.LocationBuildingSystem{})
 }
 
 func main() {
 	opts := engo.RunOptions{
-		Title:  "tgg",
-		Width:  400,
-		Height: 400,
+		Title:          "tgg",
+		Width:          1200,
+		Height:         800,
+		StandardInputs: true, // allows using arrow keys to move the camera around.
 	}
 	engo.Run(opts, &myScene{})
 
