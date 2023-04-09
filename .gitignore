@@ -19,3 +19,7 @@ go.work
 
 # Garbage from the IDE
 .idea
+
+# Tiled project files
+*.tiled-session
+*.tiled-project
