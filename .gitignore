@@ -17,4 +17,5 @@
 # Go workspace file
 go.work
 
+# Garbage from the IDE
 .idea
