@@ -4,6 +4,7 @@ import (
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
+	"github.com/memojito/tgg-game/systems"
 	"image/color"
 	"log"
 )
@@ -30,40 +31,13 @@ func (*myScene) Preload() {
 // to add entities and systems to your Scene.
 func (*myScene) Setup(u engo.Updater) {
 	world, _ := u.(*ecs.World)
-	world.AddSystem(&common.RenderSystem{})
-
-	location := Location{BasicEntity: ecs.NewBasic()}
-	location.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{10, 10},
-		Width:    303,
-		Height:   641,
-	}
-
-	texture, err := common.LoadedSprite("textures/main-char.png")
-	if err != nil {
-		log.Printf("failed to load texture: %v", err)
-	}
-
-	location.RenderComponent = common.RenderComponent{
-		Drawable: texture,
-		Scale:    engo.Point{1, 1},
-	}
-
-	for _, system := range world.Systems() {
-		switch sys := system.(type) {
-		case *common.RenderSystem:
-			sys.Add(&location.BasicEntity, &location.RenderComponent, &location.SpaceComponent)
-		}
-	}
-
+	engo.Input.RegisterButton("AddLocation", engo.KeyW)
 	common.SetBackground(color.White)
 
-}
+	world.AddSystem(&common.RenderSystem{})
+	world.AddSystem(&common.MouseSystem{})
 
-type Location struct {
-	ecs.BasicEntity
-	common.RenderComponent
-	common.SpaceComponent
+	world.AddSystem(&systems.LocationBuildingSystem{})
 }
 
 func main() {
