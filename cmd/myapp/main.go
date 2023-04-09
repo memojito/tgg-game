@@ -19,6 +19,12 @@ type HUD struct {
 	common.SpaceComponent
 }
 
+type Tile struct {
+	ecs.BasicEntity
+	common.RenderComponent
+	common.SpaceComponent
+}
+
 // Type uniquely defines your game type
 func (*myScene) Type() string {
 	return "myGame"
@@ -27,7 +33,7 @@ func (*myScene) Type() string {
 // Preload is called before loading any assets from the disk,
 // to allow you to register / queue them
 func (*myScene) Preload() {
-	err := engo.Files.Load("textures/main-char.png")
+	err := engo.Files.Load("textures/main-char.png", "tilemap/bg.tmx")
 	if err != nil {
 		log.Fatalf("failed to preload texture: %v", err)
 		return
@@ -76,13 +82,52 @@ func (*myScene) Setup(u engo.Updater) {
 			sys.Add(&hud.BasicEntity, &hud.RenderComponent, &hud.SpaceComponent)
 		}
 	}
+
+	// load background
+	resource, err := engo.Files.Resource("tilemap/bg.tmx")
+	if err != nil {
+		panic(err)
+	}
+	tmxResource := resource.(common.TMXResource)
+	levelData := tmxResource.Level
+
+	// loop through TileLayers from the .tmx and add each tile to a slice
+	tiles := make([]*Tile, 0)
+	for _, tileLayer := range levelData.TileLayers {
+		for _, tileElement := range tileLayer.Tiles {
+			if tileElement.Image != nil {
+				tile := &Tile{BasicEntity: ecs.NewBasic()}
+				tile.RenderComponent = common.RenderComponent{
+					Drawable: tileElement.Image,
+					Scale:    engo.Point{1, 1},
+				}
+				tile.SpaceComponent = common.SpaceComponent{
+					Position: tileElement.Point,
+					Width:    0,
+					Height:   0,
+				}
+				tiles = append(tiles, tile)
+			}
+		}
+	}
+	// add the tiles to the RenderSystem
+	for _, system := range world.Systems() {
+		switch sys := system.(type) {
+		case *common.RenderSystem:
+			for _, v := range tiles {
+				sys.Add(&v.BasicEntity, &v.RenderComponent, &v.SpaceComponent)
+			}
+		}
+	}
+
+	common.CameraBounds = levelData.Bounds()
 }
 
 func main() {
 	opts := engo.RunOptions{
 		Title:          "tgg",
-		Width:          1200,
-		Height:         800,
+		Width:          1536,
+		Height:         1024,
 		StandardInputs: true, // allows using arrow keys to move the camera around.
 	}
 	engo.Run(opts, &myScene{})
