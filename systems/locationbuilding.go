@@ -26,7 +26,6 @@ type LocationBuildingSystem struct {
 
 // Remove is called whenever an Entity is removed from the World, in order to remove it from this system as well
 func (*LocationBuildingSystem) Remove(entity ecs.BasicEntity) {
-
 }
 
 // Update is ran every frame, with `dt` being the time
@@ -37,8 +36,8 @@ func (lb *LocationBuildingSystem) Update(dt float32) {
 		location := Location{BasicEntity: ecs.NewBasic()}
 		location.SpaceComponent = common.SpaceComponent{
 			Position: engo.Point{lb.mouseTracker.MouseComponent.MouseX, lb.mouseTracker.MouseComponent.MouseY},
-			Width:    30,
-			Height:   64,
+			Width:    32,
+			Height:   32,
 		}
 
 		texture, err := common.LoadedSprite("textures/main-char.png")

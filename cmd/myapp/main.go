@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
 	"github.com/memojito/tgg-game/systems"
+	"golang.org/x/image/font/gofont/gomedium"
 	"image"
 	"image/color"
 	"log"
@@ -36,6 +38,13 @@ func (*myScene) Preload() {
 	err := engo.Files.Load("textures/main-char.png", "tilemap/bg.tmx")
 	if err != nil {
 		log.Fatalf("failed to preload texture: %v", err)
+		return
+	}
+
+	// load font
+	err = engo.Files.LoadReaderData("go.ttf", bytes.NewReader(gomedium.TTF))
+	if err != nil {
+		log.Fatalf("failed to preload font: %v", err)
 		return
 	}
 }
@@ -82,6 +91,7 @@ func (*myScene) Setup(u engo.Updater) {
 			sys.Add(&hud.BasicEntity, &hud.RenderComponent, &hud.SpaceComponent)
 		}
 	}
+	world.AddSystem(&systems.HUDTextSystem{})
 
 	// load background
 	resource, err := engo.Files.Resource("tilemap/bg.tmx")
@@ -126,10 +136,10 @@ func (*myScene) Setup(u engo.Updater) {
 
 func main() {
 	opts := engo.RunOptions{
-		Title:          "tgg",
-		Width:          1280,
-		Height:         640,
-		StandardInputs: true, // allows using arrow keys to move the camera around.
+		Title:  "tgg",
+		Width:  1280,
+		Height: 640,
+		//StandardInputs: true, // allows using arrow keys to move the camera around.
 	}
 	engo.Run(opts, &myScene{})
 
