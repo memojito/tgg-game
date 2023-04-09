@@ -125,10 +125,10 @@ func (*myScene) Setup(u engo.Updater) {
 
 func main() {
 	opts := engo.RunOptions{
-		Title:          "tgg",
-		Width:          1536,
-		Height:         1024,
-		StandardInputs: true, // allows using arrow keys to move the camera around.
+		Title:  "tgg",
+		Width:  1280,
+		Height: 640,
+		//StandardInputs: true, // allows using arrow keys to move the camera around.
 	}
 	engo.Run(opts, &myScene{})
 
