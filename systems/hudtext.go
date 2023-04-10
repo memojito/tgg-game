@@ -1,6 +1,7 @@
 package systems
 
 import (
+	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
@@ -25,14 +26,14 @@ type HUDTextEntity struct {
 	Line1, Line2, Line3, Line4 string
 }
 
-// HUDTextSystem prints the text to our HUD based on the current state of the game
+// HUDTextSystem prints the text to our HUDSystem based on the current state of the game
 type HUDTextSystem struct {
 	text1, text2, text3, text4, money Text
 
 	entities []HUDTextEntity
 }
 
-// HUDTextMessage updates the HUD text based on messages sent from other systems
+// HUDTextMessage updates the HUDSystem text based on messages sent from other systems
 type HUDTextMessage struct {
 	ecs.BasicEntity
 	common.SpaceComponent
@@ -54,8 +55,10 @@ func centerString(str string, width int) string {
 }
 
 // New is called when the system is added to the world.
-// Adds text to our HUD that will update based on the state of the game.
+// Adds text to our HUDSystem that will update based on the state of the game.
 func (h *HUDTextSystem) New(w *ecs.World) {
+	fmt.Println("HUDTextSystem was added to the Scene")
+
 	fnt := &common.Font{
 		URL:  "go.ttf",
 		FG:   color.Black,
