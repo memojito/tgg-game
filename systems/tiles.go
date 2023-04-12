@@ -17,7 +17,7 @@ type TileSystem struct {
 // New is called when the system is added to the world.
 // Adds the Background.
 func (t *TileSystem) New(w *ecs.World) {
-	fmt.Println("Tiles was added to the Scene")
+	fmt.Println("TileSystem was added to the Scene")
 
 	// load background
 	resource, err := engo.Files.Resource("tilemap/bg.tmx")

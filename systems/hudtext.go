@@ -1,7 +1,6 @@
 package systems
 
 import (
-	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
@@ -57,7 +56,7 @@ func centerString(str string, width int) string {
 // New is called when the system is added to the world.
 // Adds text to our HUDSystem that will update based on the state of the game.
 func (h *HUDTextSystem) New(w *ecs.World) {
-	fmt.Println("HUDTextSystem was added to the Scene")
+	log.Println("HUDTextSystem was added to the Scene")
 
 	fnt := &common.Font{
 		URL:  "go.ttf",

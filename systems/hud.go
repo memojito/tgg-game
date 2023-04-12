@@ -1,12 +1,12 @@
 package systems
 
 import (
-	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
 	"image"
 	"image/color"
+	"log"
 )
 
 type HUDSystem struct {
@@ -16,7 +16,7 @@ type HUDSystem struct {
 }
 
 func (h *HUDSystem) New(w *ecs.World) {
-	fmt.Println("HUDSystem was added to the Scene")
+	log.Println("HUDSystem was added to the Scene")
 
 	hud := HUDSystem{BasicEntity: ecs.NewBasic()}
 	hud.SpaceComponent = common.SpaceComponent{
@@ -25,7 +25,7 @@ func (h *HUDSystem) New(w *ecs.World) {
 		Height:   200,
 	}
 
-	hudImage := image.NewUniform(color.RGBA{205, 205, 205, 255})
+	hudImage := image.NewUniform(color.RGBA{205, 205, 205, 200})
 	hudNRGBA := common.ImageToNRGBA(hudImage, 200, 200)
 	hudImageObj := common.NewImageObject(hudNRGBA)
 	hudTexture := common.NewTextureSingle(hudImageObj)

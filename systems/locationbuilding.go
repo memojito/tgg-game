@@ -1,7 +1,6 @@
 package systems
 
 import (
-	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
@@ -76,7 +75,7 @@ func (lb *LocationBuildingSystem) Update(dt float32) {
 // New is the initialisation of the System
 func (lb *LocationBuildingSystem) New(w *ecs.World) {
 	lb.world = w
-	fmt.Println("LocationBuildingSystem was added to the Scene")
+	log.Println("LocationBuildingSystem was added to the Scene")
 
 	lb.mouseTracker.BasicEntity = ecs.NewBasic()
 	lb.mouseTracker.MouseComponent = common.MouseComponent{Track: true}

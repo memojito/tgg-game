@@ -46,7 +46,11 @@ func (*myScene) Preload() {
 // to add entities and systems to your Scene.
 func (*myScene) Setup(u engo.Updater) {
 	w, _ := u.(*ecs.World)
-	engo.Input.RegisterButton("AddLocation", engo.KeyF)
+	engo.Input.RegisterButton("MoveUp", engo.KeyW)
+	engo.Input.RegisterButton("MoveDown", engo.KeyS)
+	engo.Input.RegisterButton("MoveRight", engo.KeyD)
+	engo.Input.RegisterButton("MoveLeft", engo.KeyA)
+
 	common.SetBackground(color.White)
 
 	// Add common systems
@@ -62,14 +66,15 @@ func (*myScene) Setup(u engo.Updater) {
 	w.AddSystem(&systems.HUDSystem{})
 	w.AddSystem(&systems.HUDTextSystem{})
 	w.AddSystem(&systems.TileSystem{})
+	w.AddSystem(&systems.PlayerSystem{})
 }
 
 func main() {
 	opts := engo.RunOptions{
-		Title:          "tgg",
-		Width:          1280,
-		Height:         640,
-		StandardInputs: true, // allows using arrow keys to move the camera around.
+		Title:  "tgg",
+		Width:  1280,
+		Height: 640,
+		//StandardInputs: true, // allows using arrow keys to move the camera around.
 	}
 	engo.Run(opts, &myScene{})
 
