@@ -7,17 +7,20 @@ import (
 	"log"
 )
 
+// Player of the game
 type Player struct {
 	ecs.BasicEntity
 	common.RenderComponent
 	common.SpaceComponent
 }
 
+// PlayerSystem controls the Player
 type PlayerSystem struct {
 	world  *ecs.World
 	player Player
 }
 
+// New is called when the system is added to the world.
 func (ps *PlayerSystem) New(w *ecs.World) {
 	ps.world = w
 	log.Println("PlayerSystem was added to the Scene")
@@ -47,6 +50,7 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 	}
 }
 
+// Update is called each frame to update the system.
 func (ps *PlayerSystem) Update(dt float32) {
 	if engo.Input.Button("MoveUp").Down() {
 		ps.player.SpaceComponent.Position.Y -= 2
@@ -62,6 +66,7 @@ func (ps *PlayerSystem) Update(dt float32) {
 	}
 }
 
+// Remove takes an enitty out of the system.
 func (ps *PlayerSystem) Remove(entity ecs.BasicEntity) {
 
 }
