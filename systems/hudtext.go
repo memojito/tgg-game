@@ -75,12 +75,12 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 	h.text1 = Text{BasicEntity: ecs.NewBasic()}
 	h.text1.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: "Nothing Selected!",
+		Text: centerString("speed:", 24),
 	}
 	h.text1.SetShader(common.TextHUDShader)
 	h.text1.RenderComponent.SetZIndex(1001)
 	h.text1.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 200},
+		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 240},
 	}
 	for _, system := range w.Systems() {
 		switch sys := system.(type) {
@@ -92,12 +92,12 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 	h.text2 = Text{BasicEntity: ecs.NewBasic()}
 	h.text2.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: "click on an element",
+		Text: centerString("jumps:", 24),
 	}
 	h.text2.SetShader(common.TextHUDShader)
 	h.text2.RenderComponent.SetZIndex(1001)
 	h.text2.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 180},
+		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 210},
 	}
 	for _, system := range w.Systems() {
 		switch sys := system.(type) {
@@ -109,12 +109,12 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 	h.text3 = Text{BasicEntity: ecs.NewBasic()}
 	h.text3.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: "to get info",
+		Text: centerString("kills:", 24),
 	}
 	h.text3.SetShader(common.TextHUDShader)
 	h.text3.RenderComponent.SetZIndex(1001)
 	h.text3.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 160},
+		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 180},
 	}
 	for _, system := range w.Systems() {
 		switch sys := system.(type) {
@@ -126,12 +126,12 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 	h.text4 = Text{BasicEntity: ecs.NewBasic()}
 	h.text4.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: "about it.",
+		Text: centerString("points:", 24),
 	}
 	h.text4.SetShader(common.TextHUDShader)
 	h.text4.RenderComponent.SetZIndex(1001)
 	h.text4.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 140},
+		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 150},
 	}
 	for _, system := range w.Systems() {
 		switch sys := system.(type) {
@@ -143,7 +143,7 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 	h.money = Text{BasicEntity: ecs.NewBasic()}
 	h.money.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: "$0",
+		Text: "move somewhere with W,A,S,D",
 	}
 	h.money.SetShader(common.TextHUDShader)
 	h.money.RenderComponent.SetZIndex(1001)
@@ -196,6 +196,28 @@ func (h *HUDTextSystem) Update(dt float32) {
 			txt.Text = e.Line4
 			h.text4.RenderComponent.Drawable = txt
 		}
+	}
+	switch {
+	case engo.Input.Button("MoveUp").Down():
+		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt.Text = "moving up"
+		h.money.RenderComponent.Drawable = txt
+	case engo.Input.Button("MoveDown").Down():
+		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt.Text = "moving down"
+		h.money.RenderComponent.Drawable = txt
+	case engo.Input.Button("MoveRight").Down():
+		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt.Text = "moving right"
+		h.money.RenderComponent.Drawable = txt
+	case engo.Input.Button("MoveLeft").Down():
+		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt.Text = "moving left"
+		h.money.RenderComponent.Drawable = txt
+	default:
+		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt.Text = "move somewhere with W,A,S,D"
+		h.money.RenderComponent.Drawable = txt
 	}
 }
 
