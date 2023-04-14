@@ -27,7 +27,7 @@ type HUDTextEntity struct {
 
 // HUDTextSystem prints the text to our HUDSystem based on the current state of the game
 type HUDTextSystem struct {
-	text1, text2, text3, text4, money Text
+	text1, text2, text3, text4, corner Text
 
 	entities []HUDTextEntity
 }
@@ -42,13 +42,15 @@ type HUDTextMessage struct {
 
 const HUDTextMessageType string = "HUDTextMessage"
 
+var PrimaryColor color.Color = color.RGBA{R: 158, G: 74, B: 224, A: 225}
+
 // Type implements the engo.Message Interface
 func (HUDTextMessage) Type() string {
 	return HUDTextMessageType
 }
 
-// centerString centers a string
-func centerString(str string, width int) string {
+// CenterString centers a string
+func CenterString(str string, width int) string {
 	spaces := int(float64(width-len(str)) / 2)
 	return strings.Repeat(" ", spaces) + str + strings.Repeat(" ", width-(spaces+len(str)))
 }
@@ -60,7 +62,7 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 
 	fnt := &common.Font{
 		URL:  "go.ttf",
-		FG:   color.Black,
+		FG:   PrimaryColor,
 		Size: 24,
 	}
 
@@ -70,12 +72,11 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 		return
 	}
 
-	//txt := centerString("yo paul", 24)
-
+	// line 1
 	h.text1 = Text{BasicEntity: ecs.NewBasic()}
 	h.text1.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: centerString("speed:", 24),
+		Text: CenterString("speed:", 24),
 	}
 	h.text1.SetShader(common.TextHUDShader)
 	h.text1.RenderComponent.SetZIndex(1001)
@@ -89,10 +90,11 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 		}
 	}
 
+	// line 2
 	h.text2 = Text{BasicEntity: ecs.NewBasic()}
 	h.text2.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: centerString("jumps:", 24),
+		Text: CenterString("jumps:", 24),
 	}
 	h.text2.SetShader(common.TextHUDShader)
 	h.text2.RenderComponent.SetZIndex(1001)
@@ -106,10 +108,11 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 		}
 	}
 
+	// line 3
 	h.text3 = Text{BasicEntity: ecs.NewBasic()}
 	h.text3.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: centerString("kills:", 24),
+		Text: CenterString("kills:", 24),
 	}
 	h.text3.SetShader(common.TextHUDShader)
 	h.text3.RenderComponent.SetZIndex(1001)
@@ -123,10 +126,11 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 		}
 	}
 
+	// line 4
 	h.text4 = Text{BasicEntity: ecs.NewBasic()}
 	h.text4.RenderComponent.Drawable = common.Text{
 		Font: fnt,
-		Text: centerString("points:", 24),
+		Text: CenterString("points:", 24),
 	}
 	h.text4.SetShader(common.TextHUDShader)
 	h.text4.RenderComponent.SetZIndex(1001)
@@ -140,20 +144,20 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 		}
 	}
 
-	h.money = Text{BasicEntity: ecs.NewBasic()}
-	h.money.RenderComponent.Drawable = common.Text{
+	h.corner = Text{BasicEntity: ecs.NewBasic()}
+	h.corner.RenderComponent.Drawable = common.Text{
 		Font: fnt,
 		Text: "move somewhere with W,A,S,D",
 	}
-	h.money.SetShader(common.TextHUDShader)
-	h.money.RenderComponent.SetZIndex(1001)
-	h.money.SpaceComponent = common.SpaceComponent{
+	h.corner.SetShader(common.TextHUDShader)
+	h.corner.RenderComponent.SetZIndex(1001)
+	h.corner.SpaceComponent = common.SpaceComponent{
 		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 40},
 	}
 	for _, system := range w.Systems() {
 		switch sys := system.(type) {
 		case *common.RenderSystem:
-			sys.Add(&h.money.BasicEntity, &h.money.RenderComponent, &h.money.SpaceComponent)
+			sys.Add(&h.corner.BasicEntity, &h.corner.RenderComponent, &h.corner.SpaceComponent)
 		}
 	}
 
@@ -181,43 +185,43 @@ func (h *HUDTextSystem) Add(b *ecs.BasicEntity, s *common.SpaceComponent, m *com
 
 // Update is called each frame to update the system.
 func (h *HUDTextSystem) Update(dt float32) {
-	for _, e := range h.entities {
-		if e.MouseComponent.Clicked {
-			txt := h.text1.RenderComponent.Drawable.(common.Text)
-			txt.Text = e.Line1
-			h.text1.RenderComponent.Drawable = txt
-			txt = h.text2.RenderComponent.Drawable.(common.Text)
-			txt.Text = e.Line2
-			h.text2.RenderComponent.Drawable = txt
-			txt = h.text3.RenderComponent.Drawable.(common.Text)
-			txt.Text = e.Line3
-			h.text3.RenderComponent.Drawable = txt
-			txt = h.text4.RenderComponent.Drawable.(common.Text)
-			txt.Text = e.Line4
-			h.text4.RenderComponent.Drawable = txt
-		}
-	}
+	//for _, e := range h.entities {
+	//	if e.MouseComponent.Clicked {
+	//		txt := h.text1.RenderComponent.Drawable.(common.Text)
+	//		txt.Text = e.Line1
+	//		h.text1.RenderComponent.Drawable = txt
+	//		txt = h.text2.RenderComponent.Drawable.(common.Text)
+	//		txt.Text = e.Line2
+	//		h.text2.RenderComponent.Drawable = txt
+	//		txt = h.text3.RenderComponent.Drawable.(common.Text)
+	//		txt.Text = e.Line3
+	//		h.text3.RenderComponent.Drawable = txt
+	//		txt = h.text4.RenderComponent.Drawable.(common.Text)
+	//		txt.Text = e.Line4
+	//		h.text4.RenderComponent.Drawable = txt
+	//	}
+	//}
 	switch {
 	case engo.Input.Button("MoveUp").Down():
-		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt := h.corner.RenderComponent.Drawable.(common.Text)
 		txt.Text = "moving up"
-		h.money.RenderComponent.Drawable = txt
+		h.corner.RenderComponent.Drawable = txt
 	case engo.Input.Button("MoveDown").Down():
-		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt := h.corner.RenderComponent.Drawable.(common.Text)
 		txt.Text = "moving down"
-		h.money.RenderComponent.Drawable = txt
+		h.corner.RenderComponent.Drawable = txt
 	case engo.Input.Button("MoveRight").Down():
-		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt := h.corner.RenderComponent.Drawable.(common.Text)
 		txt.Text = "moving right"
-		h.money.RenderComponent.Drawable = txt
+		h.corner.RenderComponent.Drawable = txt
 	case engo.Input.Button("MoveLeft").Down():
-		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt := h.corner.RenderComponent.Drawable.(common.Text)
 		txt.Text = "moving left"
-		h.money.RenderComponent.Drawable = txt
+		h.corner.RenderComponent.Drawable = txt
 	default:
-		txt := h.money.RenderComponent.Drawable.(common.Text)
+		txt := h.corner.RenderComponent.Drawable.(common.Text)
 		txt.Text = "move somewhere with W,A,S,D"
-		h.money.RenderComponent.Drawable = txt
+		h.corner.RenderComponent.Drawable = txt
 	}
 }
 

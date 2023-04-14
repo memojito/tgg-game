@@ -25,7 +25,7 @@ func (h *HUDSystem) New(w *ecs.World) {
 		Height:   200,
 	}
 
-	hudImage := image.NewUniform(color.RGBA{205, 205, 205, 200})
+	hudImage := image.NewUniform(color.RGBA{255, 255, 255, 240})
 	hudNRGBA := common.ImageToNRGBA(hudImage, 200, 200)
 	hudImageObj := common.NewImageObject(hudNRGBA)
 	hudTexture := common.NewTextureSingle(hudImageObj)
