@@ -1,10 +1,10 @@
 package systems
 
 import (
-	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
+	"log"
 )
 
 // TileSystem is a piece of a TileMap which forms the background
@@ -17,7 +17,7 @@ type TileSystem struct {
 // New is called when the system is added to the world.
 // Adds the Background.
 func (t *TileSystem) New(w *ecs.World) {
-	fmt.Println("TileSystem was added to the Scene")
+	log.Println("TileSystem was added to the Scene")
 
 	// load background
 	resource, err := engo.Files.Resource("tilemap/bg.tmx")

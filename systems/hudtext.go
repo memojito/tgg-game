@@ -16,6 +16,12 @@ type Text struct {
 	common.RenderComponent
 }
 
+type HUDText struct {
+	Text
+	y    float32
+	text string
+}
+
 // HUDTextEntity is an entity for the text system. This keeps track of the position
 // size and text associated with that position.
 type HUDTextEntity struct {
@@ -27,8 +33,8 @@ type HUDTextEntity struct {
 
 // HUDTextSystem prints the text to our HUDSystem based on the current state of the game
 type HUDTextSystem struct {
-	text1, text2, text3, text4, corner Text
-
+	hudText  []HUDText
+	corner   Text
 	entities []HUDTextEntity
 }
 
@@ -72,75 +78,27 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 		return
 	}
 
-	// line 1
-	h.text1 = Text{BasicEntity: ecs.NewBasic()}
-	h.text1.RenderComponent.Drawable = common.Text{
-		Font: fnt,
-		Text: CenterString("speed:", 24),
+	h.hudText = []HUDText{
+		{Text: Text{BasicEntity: ecs.NewBasic()}, y: engo.WindowHeight() - 240, text: "speed:"},
+		{Text: Text{BasicEntity: ecs.NewBasic()}, y: engo.WindowHeight() - 210, text: "jumps:"},
+		{Text: Text{BasicEntity: ecs.NewBasic()}, y: engo.WindowHeight() - 180, text: "kills:"},
+		{Text: Text{BasicEntity: ecs.NewBasic()}, y: engo.WindowHeight() - 150, text: "points:"},
 	}
-	h.text1.SetShader(common.TextHUDShader)
-	h.text1.RenderComponent.SetZIndex(1001)
-	h.text1.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 240},
-	}
-	for _, system := range w.Systems() {
-		switch sys := system.(type) {
-		case *common.RenderSystem:
-			sys.Add(&h.text1.BasicEntity, &h.text1.RenderComponent, &h.text1.SpaceComponent)
+	for i := range h.hudText {
+		hudText := &h.hudText[i]
+		hudText.RenderComponent.Drawable = common.Text{
+			Font: fnt,
+			Text: CenterString(hudText.text, 24),
 		}
-	}
+		hudText.SetShader(common.TextHUDShader)
+		hudText.RenderComponent.SetZIndex(1001)
+		hudText.SpaceComponent.Position = engo.Point{X: 0, Y: hudText.y}
 
-	// line 2
-	h.text2 = Text{BasicEntity: ecs.NewBasic()}
-	h.text2.RenderComponent.Drawable = common.Text{
-		Font: fnt,
-		Text: CenterString("jumps:", 24),
-	}
-	h.text2.SetShader(common.TextHUDShader)
-	h.text2.RenderComponent.SetZIndex(1001)
-	h.text2.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 210},
-	}
-	for _, system := range w.Systems() {
-		switch sys := system.(type) {
-		case *common.RenderSystem:
-			sys.Add(&h.text2.BasicEntity, &h.text2.RenderComponent, &h.text2.SpaceComponent)
-		}
-	}
-
-	// line 3
-	h.text3 = Text{BasicEntity: ecs.NewBasic()}
-	h.text3.RenderComponent.Drawable = common.Text{
-		Font: fnt,
-		Text: CenterString("kills:", 24),
-	}
-	h.text3.SetShader(common.TextHUDShader)
-	h.text3.RenderComponent.SetZIndex(1001)
-	h.text3.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 180},
-	}
-	for _, system := range w.Systems() {
-		switch sys := system.(type) {
-		case *common.RenderSystem:
-			sys.Add(&h.text3.BasicEntity, &h.text3.RenderComponent, &h.text3.SpaceComponent)
-		}
-	}
-
-	// line 4
-	h.text4 = Text{BasicEntity: ecs.NewBasic()}
-	h.text4.RenderComponent.Drawable = common.Text{
-		Font: fnt,
-		Text: CenterString("points:", 24),
-	}
-	h.text4.SetShader(common.TextHUDShader)
-	h.text4.RenderComponent.SetZIndex(1001)
-	h.text4.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 150},
-	}
-	for _, system := range w.Systems() {
-		switch sys := system.(type) {
-		case *common.RenderSystem:
-			sys.Add(&h.text4.BasicEntity, &h.text4.RenderComponent, &h.text4.SpaceComponent)
+		for _, system := range w.Systems() {
+			switch sys := system.(type) {
+			case *common.RenderSystem:
+				sys.Add(&hudText.BasicEntity, &hudText.RenderComponent, &hudText.SpaceComponent)
+			}
 		}
 	}
 
