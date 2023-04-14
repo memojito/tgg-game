@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+// todo: replace it with another system which sends events to the HUDSystem
+
 type MouseTracker struct {
 	ecs.BasicEntity
 	common.MouseComponent
