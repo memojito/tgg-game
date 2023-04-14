@@ -63,11 +63,7 @@ func (lb *LocationBuildingSystem) Update(dt float32) {
 				Width:    64,
 				Height:   64,
 			},
-			MouseComponent: common.MouseComponent{},
-			Line1:          "Town",
-			Line2:          "Just built!",
-			Line3:          "A town generates",
-			Line4:          "$100 per day.",
+			text: []string{"line1, line2, line3, line4"},
 		})
 	}
 }

@@ -27,8 +27,7 @@ type HUDText struct {
 type HUDTextEntity struct {
 	*ecs.BasicEntity
 	*common.SpaceComponent
-	*common.MouseComponent
-	Line1, Line2, Line3, Line4 string
+	text []string
 }
 
 // HUDTextSystem prints the text to our HUDSystem based on the current state of the game
@@ -42,8 +41,7 @@ type HUDTextSystem struct {
 type HUDTextMessage struct {
 	ecs.BasicEntity
 	common.SpaceComponent
-	common.MouseComponent
-	Line1, Line2, Line3, Line4 string
+	text []string
 }
 
 const HUDTextMessageType string = "HUDTextMessage"
@@ -126,19 +124,16 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 		}
 		for _, system := range w.Systems() {
 			switch sys := system.(type) {
-			case *common.MouseSystem:
-				sys.Add(&msg.BasicEntity, &msg.MouseComponent, &msg.SpaceComponent, nil)
 			case *HUDTextSystem:
-				sys.Add(&msg.BasicEntity, &msg.SpaceComponent, &msg.MouseComponent, msg.Line1, msg.Line2, msg.Line3, msg.Line4)
+				sys.Add(&msg.BasicEntity, &msg.SpaceComponent, msg.text)
 			}
 		}
 	})
-
 }
 
 // Add adds an entity to the system
-func (h *HUDTextSystem) Add(b *ecs.BasicEntity, s *common.SpaceComponent, m *common.MouseComponent, l1, l2, l3, l4 string) {
-	h.entities = append(h.entities, HUDTextEntity{b, s, m, l1, l2, l3, l4})
+func (h *HUDTextSystem) Add(b *ecs.BasicEntity, s *common.SpaceComponent, text []string) {
+	h.entities = append(h.entities, HUDTextEntity{b, s, text})
 }
 
 // Update is called each frame to update the system.
