@@ -26,7 +26,7 @@ func Gravity(position float32, g float32) float32 {
 }
 
 var NullLvl float32 = 190
-var g float32 = 0
+var g float32 = 0.6
 
 // New is called when the system is added to the world.
 func (ps *PlayerSystem) New(w *ecs.World) {
@@ -76,11 +76,11 @@ func (ps *PlayerSystem) Update(dt float32) {
 		ps.player.SpaceComponent.Position.Y -= 80
 	}
 	if ps.player.SpaceComponent.Position.Y < NullLvl {
-		g += 0.1
+		g += 0.06 * g * g
 		ps.player.SpaceComponent.Position.Y = Gravity(ps.player.SpaceComponent.Position.Y, g)
 	}
 	if ps.player.SpaceComponent.Position.Y >= NullLvl {
-		g = 0
+		g = 0.6
 	}
 
 	log.Println(g)
