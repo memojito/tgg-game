@@ -108,7 +108,7 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 	h.corner.SetShader(common.TextHUDShader)
 	h.corner.RenderComponent.SetZIndex(1001)
 	h.corner.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: engo.WindowHeight() - 40},
+		Position: engo.Point{X: 0, Y: 600},
 	}
 	for _, system := range w.Systems() {
 		switch sys := system.(type) {

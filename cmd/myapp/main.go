@@ -46,10 +46,11 @@ func (*myScene) Preload() {
 // to add entities and systems to your Scene.
 func (*myScene) Setup(u engo.Updater) {
 	w, _ := u.(*ecs.World)
-	engo.Input.RegisterButton("MoveUp", engo.KeyW)
-	engo.Input.RegisterButton("MoveDown", engo.KeyS)
+	//engo.Input.RegisterButton("MoveUp", engo.KeyW)
+	//engo.Input.RegisterButton("MoveDown", engo.KeyS)
 	engo.Input.RegisterButton("MoveRight", engo.KeyD)
 	engo.Input.RegisterButton("MoveLeft", engo.KeyA)
+	engo.Input.RegisterButton("Jump", engo.KeySpace)
 
 	common.SetBackground(color.White)
 
@@ -60,6 +61,9 @@ func (*myScene) Setup(u engo.Updater) {
 		400, engo.DefaultHorizontalAxis,
 		engo.DefaultVerticalAxis)
 	w.AddSystem(kbs)
+	//w.AddSystem(&common.FPSSystem{
+	//	Terminal: true,
+	//})
 
 	// Add custom systems
 	w.AddSystem(&systems.LocationBuildingSystem{})

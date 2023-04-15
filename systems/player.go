@@ -20,6 +20,14 @@ type PlayerSystem struct {
 	player Player
 }
 
+func Gravity(position float32, g float32) float32 {
+	position += g
+	return position
+}
+
+var NullLvl float32 = 190
+var g float32 = 0
+
 // New is called when the system is added to the world.
 func (ps *PlayerSystem) New(w *ecs.World) {
 	ps.world = w
@@ -27,7 +35,7 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 
 	ps.player.BasicEntity = ecs.NewBasic()
 	ps.player.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{100, engo.WindowHeight()/2 - 100},
+		Position: engo.Point{100, NullLvl},
 		Width:    64,
 		Height:   64,
 	}
@@ -52,18 +60,30 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 
 // Update is called each frame to update the system.
 func (ps *PlayerSystem) Update(dt float32) {
-	if engo.Input.Button("MoveUp").Down() {
-		ps.player.SpaceComponent.Position.Y -= 2
-	}
-	if engo.Input.Button("MoveDown").Down() {
-		ps.player.SpaceComponent.Position.Y += 2
-	}
+	//if engo.Input.Button("MoveUp").Down() {
+	//	ps.player.SpaceComponent.Position.Y -= 5
+	//}
+	//if engo.Input.Button("MoveDown").Down() {
+	//	ps.player.SpaceComponent.Position.Y += 5
+	//}
 	if engo.Input.Button("MoveRight").Down() {
-		ps.player.SpaceComponent.Position.X += 2
+		ps.player.SpaceComponent.Position.X += 5
 	}
 	if engo.Input.Button("MoveLeft").Down() {
-		ps.player.SpaceComponent.Position.X -= 2
+		ps.player.SpaceComponent.Position.X -= 5
 	}
+	if engo.Input.Button("Jump").JustPressed() {
+		ps.player.SpaceComponent.Position.Y -= 80
+	}
+	if ps.player.SpaceComponent.Position.Y < NullLvl {
+		g += 0.1
+		ps.player.SpaceComponent.Position.Y = Gravity(ps.player.SpaceComponent.Position.Y, g)
+	}
+	if ps.player.SpaceComponent.Position.Y >= NullLvl {
+		g = 0
+	}
+
+	log.Println(g)
 }
 
 // Remove takes an enitty out of the system.
