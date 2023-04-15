@@ -76,7 +76,10 @@ func (ps *PlayerSystem) Update(dt float32) {
 		ps.player.SpaceComponent.Position.Y -= 80
 	}
 	if ps.player.SpaceComponent.Position.Y < NullLvl {
-		g += 0.06 * g * g
+		if g <= 10 {
+			g += 0.06 * g * g
+		}
+
 		ps.player.SpaceComponent.Position.Y = Gravity(ps.player.SpaceComponent.Position.Y, g)
 	}
 	if ps.player.SpaceComponent.Position.Y >= NullLvl {
