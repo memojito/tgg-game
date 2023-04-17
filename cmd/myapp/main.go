@@ -57,6 +57,7 @@ func (*myScene) Setup(u engo.Updater) {
 	// Add common systems
 	w.AddSystem(&common.RenderSystem{})
 	w.AddSystem(&common.MouseSystem{})
+	w.AddSystem(&common.CollisionSystem{})
 	kbs := common.NewKeyboardScroller(
 		400, engo.DefaultHorizontalAxis,
 		engo.DefaultVerticalAxis)

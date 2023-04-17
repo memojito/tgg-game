@@ -12,6 +12,7 @@ type Player struct {
 	ecs.BasicEntity
 	common.RenderComponent
 	common.SpaceComponent
+	common.CollisionComponent
 }
 
 // PlayerSystem controls the Player
@@ -40,6 +41,13 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 		Height:   64,
 	}
 
+	shape := common.Shape{
+		Ellipse: common.Ellipse{0, 0, 10, 10},
+		Lines:   nil,
+		N:       0,
+	}
+	ps.player.SpaceComponent.AddShape(shape)
+
 	texture, err := common.LoadedSprite("textures/main-char.png")
 	if err != nil {
 		log.Printf("failed to load texture: %v", err)
@@ -50,10 +58,14 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 		Scale:    engo.Point{1, 1},
 	}
 
+	ps.player.CollisionComponent = common.CollisionComponent{}
+
 	for _, system := range ps.world.Systems() {
 		switch sys := system.(type) {
 		case *common.RenderSystem:
 			sys.Add(&ps.player.BasicEntity, &ps.player.RenderComponent, &ps.player.SpaceComponent)
+		case *common.CollisionSystem:
+			sys.Add(&ps.player.BasicEntity, &ps.player.CollisionComponent, &ps.player.SpaceComponent)
 		}
 	}
 }
@@ -86,7 +98,9 @@ func (ps *PlayerSystem) Update(dt float32) {
 		g = 0.6
 	}
 
-	log.Println(g)
+	engo.Mailbox.Listen("CollisionMessage", func(msg engo.Message) {
+		log.Println("Collision")
+	})
 }
 
 // Remove takes an enitty out of the system.
