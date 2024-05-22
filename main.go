@@ -2,23 +2,17 @@ package main
 
 import (
 	"bytes"
+	"golang.org/x/image/font/gofont/gomedium"
+	"image/color"
+	"log"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
 	"github.com/memojito/tgg-game/systems"
-	"golang.org/x/image/font/gofont/gomedium"
-	"image/color"
-	"log"
 )
 
-type myScene struct {
-}
-
-type Tile struct {
-	ecs.BasicEntity
-	common.RenderComponent
-	common.SpaceComponent
-}
+type myScene struct{}
 
 // Type uniquely defines your game type
 func (*myScene) Type() string {
@@ -28,7 +22,7 @@ func (*myScene) Type() string {
 // Preload is called before loading any assets from the disk,
 // to allow you to register / queue them
 func (*myScene) Preload() {
-	err := engo.Files.Load("textures/main-char.png", "tilemap/bg.tmx")
+	err := engo.Files.Load("textures/main-char.png", "tilemap/top.tmx", "tilemap/bottom.tmx")
 	if err != nil {
 		log.Fatalf("failed to preload texture: %v", err)
 		return
@@ -48,13 +42,15 @@ func (*myScene) Setup(u engo.Updater) {
 	w, _ := u.(*ecs.World)
 	//engo.Input.RegisterButton("MoveUp", engo.KeyW)
 	//engo.Input.RegisterButton("MoveDown", engo.KeyS)
+	// register buttons
 	engo.Input.RegisterButton("MoveRight", engo.KeyD)
 	engo.Input.RegisterButton("MoveLeft", engo.KeyA)
 	engo.Input.RegisterButton("Jump", engo.KeySpace)
 
+	// background
 	common.SetBackground(color.White)
 
-	// Add common systems
+	// add common systems
 	w.AddSystem(&common.RenderSystem{})
 	w.AddSystem(&common.MouseSystem{})
 	w.AddSystem(&common.CollisionSystem{})
@@ -70,7 +66,7 @@ func (*myScene) Setup(u engo.Updater) {
 	w.AddSystem(&systems.LocationBuildingSystem{})
 	w.AddSystem(&systems.HUDSystem{})
 	w.AddSystem(&systems.HUDTextSystem{})
-	w.AddSystem(&systems.TileSystem{})
+	w.AddSystem(&systems.Background{})
 	w.AddSystem(&systems.PlayerSystem{})
 }
 

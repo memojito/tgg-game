@@ -1,12 +1,13 @@
 package systems
 
 import (
-	"github.com/EngoEngine/ecs"
-	"github.com/EngoEngine/engo"
-	"github.com/EngoEngine/engo/common"
 	"image"
 	"image/color"
 	"log"
+
+	"github.com/EngoEngine/ecs"
+	"github.com/EngoEngine/engo"
+	"github.com/EngoEngine/engo/common"
 )
 
 type HUDSystem struct {
@@ -15,6 +16,7 @@ type HUDSystem struct {
 	common.SpaceComponent
 }
 
+// New initializes the system.
 func (h *HUDSystem) New(w *ecs.World) {
 	log.Println("HUDSystem was added to the Scene")
 
@@ -46,8 +48,5 @@ func (h *HUDSystem) New(w *ecs.World) {
 	}
 }
 
-// Remove takes an enitty out of the system.
-// It does nothing as HUDTextSystem has no entities.
 func (h *HUDSystem) Remove(entity ecs.BasicEntity) {}
-
-func (h *HUDSystem) Update(dt float32) {}
+func (h *HUDSystem) Update(dt float32)             {}

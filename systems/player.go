@@ -1,10 +1,11 @@
 package systems
 
 import (
+	"log"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
-	"log"
 )
 
 // Player of the game
@@ -26,23 +27,23 @@ func Gravity(position float32, g float32) float32 {
 	return position
 }
 
-var NullLvl float32 = 190
+var NullLvl float32 = 0
 var g float32 = 0.6
 
-// New is called when the system is added to the world.
+// New is the initialization of the system.
 func (ps *PlayerSystem) New(w *ecs.World) {
 	ps.world = w
 	log.Println("PlayerSystem was added to the Scene")
 
 	ps.player.BasicEntity = ecs.NewBasic()
 	ps.player.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{100, NullLvl},
+		Position: engo.Point{X: 0, Y: 0},
 		Width:    64,
 		Height:   64,
 	}
 
 	shape := common.Shape{
-		Ellipse: common.Ellipse{0, 0, 10, 10},
+		Ellipse: common.Ellipse{Rx: 10, Ry: 10},
 		Lines:   nil,
 		N:       0,
 	}
@@ -70,23 +71,20 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 	}
 }
 
-// Update is called each frame to update the system.
+// Update the system per frame.
 func (ps *PlayerSystem) Update(dt float32) {
-	//if engo.Input.Button("MoveUp").Down() {
-	//	ps.player.SpaceComponent.Position.Y -= 5
-	//}
-	//if engo.Input.Button("MoveDown").Down() {
-	//	ps.player.SpaceComponent.Position.Y += 5
-	//}
 	if engo.Input.Button("MoveRight").Down() {
 		ps.player.SpaceComponent.Position.X += 5
 	}
+
 	if engo.Input.Button("MoveLeft").Down() {
 		ps.player.SpaceComponent.Position.X -= 5
 	}
+
 	if engo.Input.Button("Jump").JustPressed() {
 		ps.player.SpaceComponent.Position.Y -= 80
 	}
+
 	if ps.player.SpaceComponent.Position.Y < NullLvl {
 		if g <= 10 {
 			g += 0.06 * g * g
@@ -94,16 +92,28 @@ func (ps *PlayerSystem) Update(dt float32) {
 
 		ps.player.SpaceComponent.Position.Y = Gravity(ps.player.SpaceComponent.Position.Y, g)
 	}
+
 	if ps.player.SpaceComponent.Position.Y >= NullLvl {
 		g = 0.6
 	}
+
+	engo.Mailbox.Dispatch(common.CameraMessage{
+		Axis:        common.YAxis,
+		Value:       ps.player.SpaceComponent.Position.Y,
+		Incremental: false,
+	})
+
+	engo.Mailbox.Dispatch(common.CameraMessage{
+		Axis:        common.XAxis,
+		Value:       ps.player.SpaceComponent.Position.X,
+		Incremental: false,
+	})
 
 	engo.Mailbox.Listen("CollisionMessage", func(msg engo.Message) {
 		log.Println("Collision")
 	})
 }
 
-// Remove takes an enitty out of the system.
 func (ps *PlayerSystem) Remove(entity ecs.BasicEntity) {
 
 }

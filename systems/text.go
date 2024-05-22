@@ -1,12 +1,13 @@
 package systems
 
 import (
-	"github.com/EngoEngine/ecs"
-	"github.com/EngoEngine/engo"
-	"github.com/EngoEngine/engo/common"
 	"image/color"
 	"log"
 	"strings"
+
+	"github.com/EngoEngine/ecs"
+	"github.com/EngoEngine/engo"
+	"github.com/EngoEngine/engo/common"
 )
 
 // Text is an entity containing text printed to the screen
@@ -59,8 +60,8 @@ func CenterString(str string, width int) string {
 	return strings.Repeat(" ", spaces) + str + strings.Repeat(" ", width-(spaces+len(str)))
 }
 
-// New is called when the system is added to the world.
-// Adds text to our HUDSystem that will update based on the state of the game.
+// New initializes the HUDSystem,
+// adds text that will update based on the state of the game.
 func (h *HUDTextSystem) New(w *ecs.World) {
 	log.Println("HUDTextSystem was added to the Scene")
 
@@ -131,29 +132,13 @@ func (h *HUDTextSystem) New(w *ecs.World) {
 	})
 }
 
-// Add adds an entity to the system
+// Add an entity to the system.
 func (h *HUDTextSystem) Add(b *ecs.BasicEntity, s *common.SpaceComponent, text []string) {
 	h.entities = append(h.entities, HUDTextEntity{b, s, text})
 }
 
-// Update is called each frame to update the system.
+// Update the hud per frame.
 func (h *HUDTextSystem) Update(dt float32) {
-	//for _, e := range h.entities {
-	//	if e.MouseComponent.Clicked {
-	//		txt := h.text1.RenderComponent.Drawable.(common.Text)
-	//		txt.Text = e.Line1
-	//		h.text1.RenderComponent.Drawable = txt
-	//		txt = h.text2.RenderComponent.Drawable.(common.Text)
-	//		txt.Text = e.Line2
-	//		h.text2.RenderComponent.Drawable = txt
-	//		txt = h.text3.RenderComponent.Drawable.(common.Text)
-	//		txt.Text = e.Line3
-	//		h.text3.RenderComponent.Drawable = txt
-	//		txt = h.text4.RenderComponent.Drawable.(common.Text)
-	//		txt.Text = e.Line4
-	//		h.text4.RenderComponent.Drawable = txt
-	//	}
-	//}
 	switch {
 	case engo.Input.Button("MoveUp").Down():
 		txt := h.corner.RenderComponent.Drawable.(common.Text)
@@ -178,6 +163,4 @@ func (h *HUDTextSystem) Update(dt float32) {
 	}
 }
 
-// Remove takes an enitty out of the system.
-// It does nothing as HUDTextSystem has no entities.
 func (h *HUDTextSystem) Remove(entity ecs.BasicEntity) {}
