@@ -22,14 +22,6 @@ type PlayerSystem struct {
 	player Player
 }
 
-func Gravity(position float32, g float32) float32 {
-	position += g
-	return position
-}
-
-var NullLvl float32 = 0
-var g float32 = 0.6
-
 // New is the initialization of the system.
 func (ps *PlayerSystem) New(w *ecs.World) {
 	ps.world = w
@@ -42,13 +34,6 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 		Height:   64,
 	}
 
-	shape := common.Shape{
-		Ellipse: common.Ellipse{Rx: 10, Ry: 10},
-		Lines:   nil,
-		N:       0,
-	}
-	ps.player.SpaceComponent.AddShape(shape)
-
 	texture, err := common.LoadedSprite("textures/main-char.png")
 	if err != nil {
 		log.Printf("failed to load texture: %v", err)
@@ -59,7 +44,7 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 		Scale:    engo.Point{1, 1},
 	}
 
-	ps.player.CollisionComponent = common.CollisionComponent{}
+	ps.player.CollisionComponent = common.CollisionComponent{Main: common.CollisionGroup(1)}
 
 	for _, system := range ps.world.Systems() {
 		switch sys := system.(type) {
@@ -87,18 +72,6 @@ func (ps *PlayerSystem) Update(dt float32) {
 		ps.player.SpaceComponent.Position.Y -= 80
 	}
 
-	if ps.player.SpaceComponent.Position.Y < NullLvl {
-		if g <= 10 {
-			g += 0.06 * g * g
-		}
-
-		ps.player.SpaceComponent.Position.Y = Gravity(ps.player.SpaceComponent.Position.Y, g)
-	}
-
-	if ps.player.SpaceComponent.Position.Y >= NullLvl {
-		g = 0.6
-	}
-
 	engo.Mailbox.Dispatch(common.CameraMessage{
 		Axis:        common.YAxis,
 		Value:       ps.player.SpaceComponent.Position.Y,
@@ -111,8 +84,12 @@ func (ps *PlayerSystem) Update(dt float32) {
 		Incremental: false,
 	})
 
-	engo.Mailbox.Listen("CollisionMessage", func(msg engo.Message) {
-		log.Println("Collision")
+	engo.Mailbox.Listen("CollisionMessage", func(m engo.Message) {
+		msg, ok := m.(common.CollisionMessage)
+		if !ok {
+			return
+		}
+		log.Printf("Collision in CollisionGroup: %v", msg.Entity.Main)
 	})
 }
 

@@ -40,8 +40,7 @@ func (*myScene) Preload() {
 // to add entities and systems to your Scene.
 func (*myScene) Setup(u engo.Updater) {
 	w, _ := u.(*ecs.World)
-	//engo.Input.RegisterButton("MoveUp", engo.KeyW)
-	//engo.Input.RegisterButton("MoveDown", engo.KeyS)
+
 	// register buttons
 	engo.Input.RegisterButton("MoveRight", engo.KeyD)
 	engo.Input.RegisterButton("MoveLeft", engo.KeyA)
@@ -53,21 +52,14 @@ func (*myScene) Setup(u engo.Updater) {
 	// add common systems
 	w.AddSystem(&common.RenderSystem{})
 	w.AddSystem(&common.MouseSystem{})
-	w.AddSystem(&common.CollisionSystem{})
-	//kbs := common.NewKeyboardScroller(
-	//	400, engo.DefaultHorizontalAxis,
-	//	engo.DefaultVerticalAxis)
-	//w.AddSystem(kbs)
-	//w.AddSystem(&common.FPSSystem{
-	//	Terminal: true,
-	//})
+	w.AddSystem(&common.CollisionSystem{Solids: common.CollisionGroup(1)}) // collision group 1 will be solid
 
 	// Add custom systems
+	w.AddSystem(&systems.PhysicsSystem{})
 	w.AddSystem(&systems.LocationBuildingSystem{})
+	w.AddSystem(&systems.Background{})
 	w.AddSystem(&systems.HUDSystem{})
 	w.AddSystem(&systems.HUDTextSystem{})
-	w.AddSystem(&systems.Background{})
-	w.AddSystem(&systems.PhysicsSystem{})
 	w.AddSystem(&systems.PlayerSystem{})
 }
 

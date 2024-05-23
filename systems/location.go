@@ -38,7 +38,7 @@ func (lb *LocationBuildingSystem) Update(dt float32) {
 
 		location.RenderComponent = common.RenderComponent{
 			Drawable: texture,
-			Scale:    engo.Point{0.1, 0.1},
+			Scale:    engo.Point{X: 1, Y: 1},
 		}
 
 		for _, system := range lb.world.Systems() {
