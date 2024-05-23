@@ -27,12 +27,11 @@ func (t *Background) New(w *ecs.World) {
 	log.Println("Background was added to the Scene")
 
 	// load top background
-	top, err := engo.Files.Resource("tilemap/top.tmx")
+	top, err := engo.Files.Resource("tilemap/bg.tmx")
 	if err != nil {
 		panic(err)
 	}
 	topData := top.(common.TMXResource).Level
-	topData.RenderOrder = "top-up"
 
 	// loop through TileLayers from the .tmx and add each tile to a slice
 	tiles := make([]*Background, 0)
@@ -46,8 +45,6 @@ func (t *Background) New(w *ecs.World) {
 				}
 				tile.SpaceComponent = common.SpaceComponent{
 					Position: tileElement.Point,
-					Width:    0,
-					Height:   0,
 				}
 				tiles = append(tiles, tile)
 				tile.RenderComponent.SetZIndex(-1)

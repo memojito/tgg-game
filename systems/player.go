@@ -37,7 +37,7 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 
 	ps.player.BasicEntity = ecs.NewBasic()
 	ps.player.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 0, Y: 0},
+		Position: engo.Point{X: 100, Y: 100},
 		Width:    64,
 		Height:   64,
 	}
@@ -67,6 +67,8 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 			sys.Add(&ps.player.BasicEntity, &ps.player.RenderComponent, &ps.player.SpaceComponent)
 		case *common.CollisionSystem:
 			sys.Add(&ps.player.BasicEntity, &ps.player.CollisionComponent, &ps.player.SpaceComponent)
+		case *PhysicsSystem:
+			sys.Add(&ps.player.BasicEntity, &ps.player.SpaceComponent)
 		}
 	}
 }
