@@ -22,7 +22,7 @@ func (ps *PhysicsSystem) New(world *ecs.World) {}
 // Update the system per frame
 func (ps *PhysicsSystem) Update(dt float32) {
 	for _, e := range ps.entities {
-		e.SpaceComponent.Position.Y += 5
+		e.SpaceComponent.Position.Y += 2
 	}
 }
 

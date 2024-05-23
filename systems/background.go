@@ -91,6 +91,10 @@ func (b *Background) New(w *ecs.World) {
 						Y: tileElement.Y + 8*TileSize,
 					},
 				}
+				tile.SpaceComponent.AddShape(common.Shape{
+					Ellipse: common.Ellipse{Cx: 0, Cy: 0, Rx: TileSize, Ry: TileSize},
+					N:       2,
+				})
 				tile.RenderComponent.SetZIndex(-1)
 				tile.CollisionComponent = common.CollisionComponent{Group: common.CollisionGroup(1)}
 				midTiles = append(midTiles, tile)

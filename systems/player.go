@@ -69,7 +69,7 @@ func (ps *PlayerSystem) Update(dt float32) {
 	}
 
 	if engo.Input.Button("Jump").JustPressed() {
-		ps.player.SpaceComponent.Position.Y -= 80
+		ps.player.SpaceComponent.Position.Y -= 30
 	}
 
 	engo.Mailbox.Dispatch(common.CameraMessage{
