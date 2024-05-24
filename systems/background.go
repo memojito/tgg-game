@@ -8,8 +8,8 @@ import (
 	"github.com/EngoEngine/engo/common"
 )
 
-// TileSize represents the size of a tile in pixels.
-const TileSize = 32
+// tileSize represents the size of a tile in pixels.
+const tileSize = 32
 
 // Tile forms the background. It's mostly static.
 type Tile struct {
@@ -49,8 +49,8 @@ func (b *Background) New(w *ecs.World) {
 				}
 				tile.SpaceComponent = common.SpaceComponent{
 					Position: engo.Point{
-						X: tileElement.X - TileSize,
-						Y: tileElement.Y - TileSize,
+						X: tileElement.X - tileSize,
+						Y: tileElement.Y - tileSize,
 					},
 				}
 				tiles = append(tiles, tile)
@@ -87,14 +87,11 @@ func (b *Background) New(w *ecs.World) {
 				}
 				tile.SpaceComponent = common.SpaceComponent{
 					Position: engo.Point{
-						X: tileElement.X + TileSize,
-						Y: tileElement.Y + 8*TileSize,
+						X: tileElement.X + tileSize,
+						Y: tileElement.Y + 8*tileSize,
 					},
 				}
-				tile.SpaceComponent.AddShape(common.Shape{
-					Ellipse: common.Ellipse{Cx: 0, Cy: 0, Rx: TileSize, Ry: TileSize},
-					N:       2,
-				})
+
 				tile.RenderComponent.SetZIndex(-1)
 				tile.CollisionComponent = common.CollisionComponent{Group: common.CollisionGroup(1)}
 				midTiles = append(midTiles, tile)

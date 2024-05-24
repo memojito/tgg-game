@@ -8,6 +8,8 @@ import (
 	"github.com/EngoEngine/engo/common"
 )
 
+const playerSize = 64
+
 // Player of the game
 type Player struct {
 	ecs.BasicEntity
@@ -30,9 +32,28 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 	ps.player.BasicEntity = ecs.NewBasic()
 	ps.player.SpaceComponent = common.SpaceComponent{
 		Position: engo.Point{X: 100, Y: 100},
-		Width:    64,
-		Height:   64,
+		Width:    100,
+		Height:   100,
 	}
+	//s := common.Shape{}
+	//s.Lines = make([]engo.Line, 4)
+	//s.Lines = append(s.Lines, engo.Line{
+	//	P1: engo.Point{0, 0},
+	//	P2: engo.Point{0, PlayerSize},
+	//})
+	//s.Lines = append(s.Lines, engo.Line{
+	//	P1: engo.Point{0, PlayerSize},
+	//	P2: engo.Point{PlayerSize, PlayerSize},
+	//})
+	//s.Lines = append(s.Lines, engo.Line{
+	//	P1: engo.Point{PlayerSize, PlayerSize},
+	//	P2: engo.Point{PlayerSize, 0},
+	//})
+	//s.Lines = append(s.Lines, engo.Line{
+	//	P1: engo.Point{PlayerSize, 0},
+	//	P2: engo.Point{0, 0},
+	//})
+	//ps.player.SpaceComponent.AddShape(s)
 
 	texture, err := common.LoadedSprite("textures/main-char.png")
 	if err != nil {
@@ -41,7 +62,7 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 
 	ps.player.RenderComponent = common.RenderComponent{
 		Drawable: texture,
-		Scale:    engo.Point{1, 1},
+		Scale:    engo.Point{X: 1, Y: 1},
 	}
 
 	ps.player.CollisionComponent = common.CollisionComponent{Main: common.CollisionGroup(1)}
