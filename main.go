@@ -22,7 +22,13 @@ func (*myScene) Type() string {
 // Preload is called before loading any assets from the disk,
 // to allow you to register / queue them
 func (*myScene) Preload() {
-	err := engo.Files.Load("textures/main-char.png", "tilemap/bg.tmx", "tilemap/mid.tmx", "textures/enemy-char.png")
+	err := engo.Files.Load("textures/main-char.png",
+		"textures/enemy-char.png",
+		"tilemap/bg.tmx",
+		"tilemap/mid.tmx",
+		"tilemap/side.tmx",
+		"tilemap/wall.tmx",
+	)
 	if err != nil {
 		log.Fatalf("failed to preload texture: %v", err)
 		return
@@ -58,6 +64,7 @@ func (*myScene) Setup(u engo.Updater) {
 	w.AddSystem(&systems.PhysicsSystem{})
 	w.AddSystem(&systems.LocationBuildingSystem{})
 	w.AddSystem(&systems.Background{})
+	w.AddSystem(&systems.Boundaries{})
 	w.AddSystem(&systems.HUDSystem{})
 	w.AddSystem(&systems.HUDTextSystem{})
 	w.AddSystem(&systems.PlayerSystem{})

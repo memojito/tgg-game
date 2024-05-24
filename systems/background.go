@@ -8,22 +8,11 @@ import (
 	"github.com/EngoEngine/engo/common"
 )
 
-// tileSize represents the size of a tile in pixels.
-const tileSize = 32
-
-// Tile forms the background. It's mostly static.
-type Tile struct {
-	ecs.BasicEntity
-	common.RenderComponent
-	common.SpaceComponent
-}
-
 // Background is a piece of a TileMap which forms the background
 type Background struct {
 	ecs.BasicEntity
 	common.RenderComponent
 	common.SpaceComponent
-	common.CollisionComponent
 }
 
 // New adds the Background.
@@ -49,8 +38,8 @@ func (b *Background) New(w *ecs.World) {
 				}
 				tile.SpaceComponent = common.SpaceComponent{
 					Position: engo.Point{
-						X: tileElement.X - tileSize,
-						Y: tileElement.Y - tileSize,
+						X: tileElement.X - TileSize,
+						Y: tileElement.Y - TileSize,
 					},
 				}
 				tiles = append(tiles, tile)
@@ -58,56 +47,13 @@ func (b *Background) New(w *ecs.World) {
 			}
 		}
 	}
+
 	// add the tiles to the RenderSystem
 	for _, system := range w.Systems() {
 		switch sys := system.(type) {
 		case *common.RenderSystem:
 			for _, v := range tiles {
 				sys.Add(&v.BasicEntity, &v.RenderComponent, &v.SpaceComponent)
-			}
-		}
-	}
-
-	// load bg background
-	mid, err := engo.Files.Resource("tilemap/mid.tmx")
-	if err != nil {
-		panic(err)
-	}
-	midData := mid.(common.TMXResource).Level
-
-	// loop through TileLayers from the .tmx and add each tile to a slice
-	midTiles := make([]*Background, 0)
-	for _, tileLayer := range midData.TileLayers {
-		for _, tileElement := range tileLayer.Tiles {
-			if tileElement.Image != nil {
-				tile := &Background{BasicEntity: ecs.NewBasic()}
-				tile.RenderComponent = common.RenderComponent{
-					Drawable: tileElement.Image,
-					Scale:    engo.Point{1, 1},
-				}
-				tile.SpaceComponent = common.SpaceComponent{
-					Position: engo.Point{
-						X: tileElement.X + tileSize,
-						Y: tileElement.Y + 8*tileSize,
-					},
-				}
-
-				tile.RenderComponent.SetZIndex(-1)
-				tile.CollisionComponent = common.CollisionComponent{Group: common.CollisionGroup(1)}
-				midTiles = append(midTiles, tile)
-			}
-		}
-	}
-	// add the tiles to the RenderSystem and CollisionSystem
-	for _, system := range w.Systems() {
-		switch sys := system.(type) {
-		case *common.RenderSystem:
-			for _, v := range midTiles {
-				sys.Add(&v.BasicEntity, &v.RenderComponent, &v.SpaceComponent)
-			}
-		case *common.CollisionSystem:
-			for _, v := range midTiles {
-				sys.Add(&v.BasicEntity, &v.CollisionComponent, &v.SpaceComponent)
 			}
 		}
 	}

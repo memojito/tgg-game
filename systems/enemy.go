@@ -36,26 +36,6 @@ func (ps *EnemySystem) New(w *ecs.World) {
 		Height:   100,
 	}
 
-	//s := common.Shape{}
-	//s.Lines = make([]engo.Line, 4)
-	//s.Lines = append(s.Lines, engo.Line{
-	//	P1: engo.Point{0, -1},
-	//	P2: engo.Point{0, PlayerSize + 1},
-	//})
-	//s.Lines = append(s.Lines, engo.Line{
-	//	P1: engo.Point{-1, PlayerSize + 1},
-	//	P2: engo.Point{PlayerSize + 1, PlayerSize + 1},
-	//})
-	//s.Lines = append(s.Lines, engo.Line{
-	//	P1: engo.Point{PlayerSize, PlayerSize + 1},
-	//	P2: engo.Point{PlayerSize, -1},
-	//})
-	//s.Lines = append(s.Lines, engo.Line{
-	//	P1: engo.Point{PlayerSize + 1, 0},
-	//	P2: engo.Point{-1, 0},
-	//})
-	//ps.enemy.SpaceComponent.AddShape(s)
-
 	texture, err := common.LoadedSprite("textures/enemy-char.png")
 	if err != nil {
 		log.Printf("failed to load texture: %v", err)
@@ -81,16 +61,7 @@ func (ps *EnemySystem) New(w *ecs.World) {
 }
 
 // Update the system per frame.
-func (ps *EnemySystem) Update(dt float32) {
-
-	//engo.Mailbox.Listen("CollisionMessage", func(m engo.Message) {
-	//	msg, ok := m.(common.CollisionMessage)
-	//	if !ok {
-	//		return
-	//	}
-	//	log.Printf("Collision in CollisionGroup: %v", msg.Entity.Main)
-	//})
-}
+func (ps *EnemySystem) Update(dt float32) {}
 
 func (ps *EnemySystem) Remove(entity ecs.BasicEntity) {
 
