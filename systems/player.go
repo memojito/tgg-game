@@ -63,15 +63,15 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 // Update the system per frame.
 func (ps *PlayerSystem) Update(dt float32) {
 	if engo.Input.Button("MoveRight").Down() {
-		ps.player.SpaceComponent.Position.X += 5
+		Move(&ps.player.SpaceComponent, 5, 0)
 	}
 
 	if engo.Input.Button("MoveLeft").Down() {
-		ps.player.SpaceComponent.Position.X -= 5
+		Move(&ps.player.SpaceComponent, -5, 0)
 	}
 
 	if engo.Input.Button("Jump").JustPressed() {
-		ps.player.SpaceComponent.Position.Y -= 30
+		Move(&ps.player.SpaceComponent, 0, -50)
 	}
 
 	engo.Mailbox.Dispatch(common.CameraMessage{
