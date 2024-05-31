@@ -10,19 +10,12 @@ import (
 
 const playerSize = 64
 
-// Movable provides the Move method
-type Movable struct {
-	common.SpaceComponent
-}
-
 // Player of the game
 type Player struct {
 	ecs.BasicEntity
 	common.RenderComponent
 	common.SpaceComponent
 	common.CollisionComponent
-
-	Movable
 }
 
 // PlayerSystem controls the Player
@@ -67,28 +60,18 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 	}
 }
 
-func (m *common.SpaceComponent) Move(x float32, y float32) {
-	m.Position.X += x
-	m.Position.Y += y
-}
-
-func (m *Movable) Move(x float32, y float32) {
-	m.SpaceComponent.Position.X += x
-	m.SpaceComponent.Position.Y += y
-}
-
 // Update the system per frame.
 func (ps *PlayerSystem) Update(dt float32) {
 	if engo.Input.Button("MoveRight").Down() {
-		ps.player.Move(-5, 0)
+		Move(&ps.player.SpaceComponent, 5, 0)
 	}
 
 	if engo.Input.Button("MoveLeft").Down() {
-		ps.player.SpaceComponent.Position.X -= 5
+		Move(&ps.player.SpaceComponent, -5, 0)
 	}
 
 	if engo.Input.Button("Jump").JustPressed() {
-		ps.player.SpaceComponent.Position.Y -= 30
+		Move(&ps.player.SpaceComponent, 0, -50)
 	}
 
 	engo.Mailbox.Dispatch(common.CameraMessage{
