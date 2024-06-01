@@ -8,8 +8,6 @@ import (
 	"github.com/EngoEngine/engo/common"
 )
 
-const playerSize = 64
-
 // Player of the game
 type Player struct {
 	ecs.BasicEntity
@@ -33,9 +31,9 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 
 	ps.player.BasicEntity = ecs.NewBasic()
 	ps.player.SpaceComponent = common.SpaceComponent{
-		Position: engo.Point{X: 100, Y: 100},
-		Width:    100,
-		Height:   100,
+		Position: engo.Point{X: PlayerSize, Y: PlayerSize},
+		Width:    PlayerSize,
+		Height:   PlayerSize,
 	}
 
 	texture, err := common.LoadedSprite("textures/main-char.png")
@@ -52,7 +50,7 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 
 	ps.player.Movable.h = hGlobal
 	ps.player.Movable.hMax = hMaxGlobal
-	ps.player.Movable.n = nGlobal
+	ps.player.Movable.n = 0
 
 	for _, system := range ps.world.Systems() {
 		switch sys := system.(type) {
@@ -78,7 +76,10 @@ func (ps *PlayerSystem) Update(dt float32) {
 
 	if engo.Input.Button("Jump").JustPressed() {
 		ps.player.Movable.h = hGlobal
-		Move(&ps.player.SpaceComponent, 0, -70)
+		engo.Mailbox.Dispatch(JumpTextMessage{
+			BasicEntity:    ps.player.BasicEntity,
+			SpaceComponent: ps.player.SpaceComponent,
+		})
 	}
 
 	engo.Mailbox.Dispatch(common.CameraMessage{
@@ -93,8 +94,8 @@ func (ps *PlayerSystem) Update(dt float32) {
 		Incremental: false,
 	})
 
-	if ps.player.Movable.n == nMaxGlobal {
-		ps.player.Movable.n = nGlobal
+	if ps.player.Movable.n == nGlobal {
+		ps.player.Movable.n = 0
 	}
 	ps.player.Movable.n++
 	log.Printf("n: %d", ps.player.Movable.n)

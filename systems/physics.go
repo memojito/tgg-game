@@ -1,7 +1,10 @@
 package systems
 
 import (
+	"log"
+
 	"github.com/EngoEngine/ecs"
+	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
 )
 
@@ -14,7 +17,6 @@ type physicsEntity struct {
 
 type PhysicsSystem struct {
 	entities []physicsEntity
-	//world    *ecs.World
 	Velocity float32
 }
 
@@ -26,10 +28,19 @@ func (ps *PhysicsSystem) Update(dt float32) {
 	for _, e := range ps.entities {
 		// move by the factor g * h where g is const and h belongs to an entity increases over time and
 		// resets if collision occurs
-		if e.Movable.n == nMaxGlobal && e.Movable.h <= e.Movable.hMax {
+		if e.Movable.n == nGlobal && e.Movable.h <= e.Movable.hMax {
 			e.h *= e.h
 		}
 		Move(e.SpaceComponent, 0, e.h*g)
+
+		engo.Mailbox.ListenOnce(JumpTextMessageType, func(m engo.Message) {
+			_, ok := m.(JumpTextMessage)
+			if !ok {
+				return
+			}
+			log.Println("Jump!!!")
+			Move(e.SpaceComponent, 0, -2)
+		})
 	}
 }
 
