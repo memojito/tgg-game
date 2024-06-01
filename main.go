@@ -77,6 +77,7 @@ func main() {
 		Width:        1280,
 		Height:       640,
 		NotResizable: true,
+		FPSLimit:     60,
 
 		//StandardInputs: true, // allows using arrow keys to move the camera around.
 	}

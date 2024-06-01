@@ -16,6 +16,8 @@ type Player struct {
 	common.RenderComponent
 	common.SpaceComponent
 	common.CollisionComponent
+
+	Movable
 }
 
 // PlayerSystem controls the Player
@@ -48,6 +50,10 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 
 	ps.player.CollisionComponent = common.CollisionComponent{Main: common.CollisionGroup(1)}
 
+	ps.player.Movable.h = hGlobal
+	ps.player.Movable.hMax = hMaxGlobal
+	ps.player.Movable.n = nGlobal
+
 	for _, system := range ps.world.Systems() {
 		switch sys := system.(type) {
 		case *common.RenderSystem:
@@ -55,7 +61,7 @@ func (ps *PlayerSystem) New(w *ecs.World) {
 		case *common.CollisionSystem:
 			sys.Add(&ps.player.BasicEntity, &ps.player.CollisionComponent, &ps.player.SpaceComponent)
 		case *PhysicsSystem:
-			sys.Add(&ps.player.BasicEntity, &ps.player.SpaceComponent)
+			sys.Add(&ps.player.BasicEntity, &ps.player.SpaceComponent, &ps.player.Movable)
 		}
 	}
 }
@@ -71,7 +77,8 @@ func (ps *PlayerSystem) Update(dt float32) {
 	}
 
 	if engo.Input.Button("Jump").JustPressed() {
-		Move(&ps.player.SpaceComponent, 0, -50)
+		ps.player.Movable.h = hGlobal
+		Move(&ps.player.SpaceComponent, 0, -70)
 	}
 
 	engo.Mailbox.Dispatch(common.CameraMessage{
@@ -86,12 +93,20 @@ func (ps *PlayerSystem) Update(dt float32) {
 		Incremental: false,
 	})
 
+	if ps.player.Movable.n == nMaxGlobal {
+		ps.player.Movable.n = nGlobal
+	}
+	ps.player.Movable.n++
+	log.Printf("n: %d", ps.player.Movable.n)
+	log.Printf("h: %f", ps.player.Movable.h)
+
 	engo.Mailbox.Listen("CollisionMessage", func(m engo.Message) {
-		msg, ok := m.(common.CollisionMessage)
+		_, ok := m.(common.CollisionMessage)
 		if !ok {
 			return
 		}
-		log.Printf("Collision in CollisionGroup: %v", msg.Entity.Main)
+		ps.player.Movable.h = hGlobal
+		//log.Printf("Collision in CollisionGroup: %v", msg.Entity.Main)
 	})
 }
 
